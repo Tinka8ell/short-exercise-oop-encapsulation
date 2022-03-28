@@ -4,49 +4,54 @@ import java.text.MessageFormat;
 
 public class WeatherReporter {
 
-    public String location;
-    public double temperature;
+    private final String location;
+    private double centigrade;
 
-    public WeatherReporter(String location, double temperature) {
+    public WeatherReporter(String location, double centigrade) {
         this.location = location;
-        this.temperature = temperature;
+        this.centigrade = centigrade;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public double getCentigrade() {
+        return centigrade;
+    }
+
+    public void updateCentigrade(double centigrade) {
+        this.centigrade = centigrade;
     }
 
     public String print() {
-
-        double newTemp = (9.0 / 5.0) * temperature + 32;
-        return MessageFormat.format("I am in {0} and it is {1}. {2}. The temperature in Fahrenheit is {3}.", location, check1(), check2(), newTemp);
-
+        return MessageFormat.format("I am in {0} and it is {1}. {2}. The temperature in Fahrenheit is {3}.",
+                location,
+                getWeatherIcon(),
+                feelsLike(),
+                getFahrenheit());
     }
 
-    public String check1() {
-        if (location == "London") {
-
-            return "🌦";
-
-        } else if (location == "California") {
-
-            return "🌅";
-
-        } else if (location == "Cape Town") {
-
-            return "🌤";
-
-        }
-        return "🔆";
+    private double getFahrenheit() {
+        return (9.0 / 5.0) * centigrade + 32;
     }
 
-    public String check2() {
-        if (temperature > 30) {
+    private String getWeatherIcon() {
+        return switch (location) {
+            case "London" -> "🌦";
+            case "California" -> "🌅";
+            case "Cape Town" -> "🌤";
+            default -> "🔆";
+        };
+    }
 
-            return "It's too hot 🥵!";
-
-        } else if (temperature < 10) {
-
-            return "It's too cold 🥶!";
-
-        }
-        return "Ahhh...it's just right 😊!";
+    private String feelsLike() {
+        String feeling = "Ahhh...it's just right 😊!";
+        if (centigrade > 30)
+            feeling ="It's too hot 🥵!";
+        else if (centigrade < 10)
+            feeling = "It's too cold 🥶!";
+        return feeling;
     }
 
 }
